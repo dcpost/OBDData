@@ -20,7 +20,22 @@ router.get('/trips', function(req, res) {
 /*
  * GET a trip.
  */
-router.get('/trips/:trip_id', function(req, res) {
+router.get('/trip', function(req, res) {
+    var db = req.db;
+    var collection = db.get('records');
+        
+    var tripID = req.get("tripID");
+    console.log(tripID);
+
+    collection.find({'hostTrip': tripID},function(e,docs){
+        res.json(docs);
+    });
+});
+
+/*
+ * GET all records.
+ */
+router.get('/records', function(req, res) {
     var db = req.db;
     var collection = db.get('records');
     collection.find({},{},function(e,docs){
@@ -77,10 +92,10 @@ router.post('/endtrip', function(req, res) {
 
     tripscollection.update(
         { inProgress: "true" },
-        {
+        {$set: {
             inProgress: "false",
             endTime: new Date()
-        },
+        }},
         function(e,docs){
        var trips=docs;
     });
@@ -99,47 +114,95 @@ router.post('/addOBDRecords', function(req, res) {
     var tripscollection = db.get('trips');
 
     tripscollection.find({},{},function(e,docs){
-       var trips=docs;
+        var trips=docs;
+        
+        var data = req.body.data;
+        data=JSON.parse(data);
+        console.log(data.records.length);
+        for (var i=0; i<data.records.length;i++) {
+
+             console.log("hello");
+            // Get our form values. These rely on the "name" attributes
+            var timeStamp = data.records[i].timeStamp;
+            
+            var fuelPumpStatus = data.records[i].fuelPumpStatus;
+            var engineRPM = data.records[i].engineRPM;
+            var seatBeltStatus = data.records[i].seatBeltStatus;
+            var absStatus = data.records[i].absStatus;
+            var hostTrip =  null;
+
+            for (var j=0; j<trips.length;j++){
+
+                var timeStampDate = Date.parse(timeStamp);
+                var startTimeDate = Date.parse(trips[j].startTime);
+                var endTimeDate = Date.parse(trips[j].endTime);
+
+                if(timeStampDate>startTimeDate && timeStampDate<endTimeDate){   
+                    hostTrip=trips[j]._id;
+                    var recordCollection = db.get('obdRecords');
+
+                    // Submit to the DB
+                    recordCollection.insert({
+                        "timeStamp" : timeStamp,
+                        "fuelPumpStatus" : fuelPumpStatus,
+                        "engineRPM" : engineRPM,
+                        "seatBeltStatus" : seatBeltStatus,
+                        "absStatus" : absStatus,
+                        "hostTrip" : hostTrip
+                    });
+                }
+            }
+        }
     });
+    res.send("End");
+});
 
-    var data = req.body.data;
+/* POST  addPhoneRecords*/
+router.post('/addPhoneRecords', function(req, res) {
 
-    data.records.forEach(function(record){
-        // Get our form values. These rely on the "name" attributes
-        var timeStamp = record.timeStamp;
-        var fuelPumpStatus = record.fuelPumpStatus;
-        var engineRPM = record.engineRPM;
-        var seatBeltStatus = item.seatBeltStatus;
-        var absStatus = item.absStatus;
-        var hostTrip =  null;
+    // Set our internal DB variable
+    var db = req.db;
 
-        data.trips.forEach(function(trip){
-            if(timeStamp>trip.startTime && timeStamp<trip.endTime){
-                hostTrip=trip._id;
+    // Set our collection
+    var tripscollection = db.get('trips');
+
+    tripscollection.find({},{},function(e,docs){
+        var trips=docs;
+        
+        var data = req.body.data;
+        data=JSON.parse(data);
+        console.log(data.records.length);
+        for (var i=0; i<data.records.length;i++) {
+
+             console.log("hello");
+            // Get our form values. These rely on the "name" attributes
+            var timeStamp = data.records[i].timeStamp;
+            var xcoord = data.records[i].xcoord;
+            var ycoord = data.records[i].ycoord;
+            var speed = data.records[i].speed;
+
+            for (var j=0; j<trips.length;j++){
+
+                var timeStampDate = Date.parse(timeStamp);
+                var startTimeDate = Date.parse(trips[j].startTime);
+                var endTimeDate = Date.parse(trips[j].endTime);
+
+                if(timeStampDate>startTimeDate && timeStampDate<endTimeDate){   
+                    hostTrip=trips[j]._id;
+                    var recordCollection = db.get('phoneRecords');
+
+                    // Submit to the DB
+                    recordCollection.insert({
+                        "xcoord" : xcoord,
+                        "ycoord" : ycoord,
+                        "speed" : speed,
+                        "hostTrip" : hostTrip
+                    });
+                }
             }
-        });
-
-        var recordCollection = db.get('trips');
-
-        // Submit to the DB
-        recordCollection.insert({
-            "timeStamp" : timeStamp,
-            "fuelPumpStatus" : fuelPumpStatus,
-            "engineRPM" : engineRPM,
-            "seatBeltStatus" : seatBeltStatus,
-            "absStatus" : absStatus,
-            "hostTrip" : hostTrip
-        }, function (err, doc) {
-            if (err) {
-                // If it failed, return error
-                res.send("There was a problem adding the information to the database.");
-            }
-            else {
-                // And forward to success page
-                res.send("");
-            }
-        });
+        }
     });
+    res.send("End");
 });
 
 module.exports = router;

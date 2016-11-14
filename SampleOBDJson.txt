@@ -1,0 +1,39 @@
+[
+{
+	"records": [{
+		"timeStamp": "Mon Nov 14 2016 14:20:14 GMT-0700 (Mountain Standard Time)",
+		"fuelPumpStatus": "hello",
+		"engineRPM": "world",
+		"seatBeltStatus": "off",
+		"absStatus": "no"
+	},
+	{
+		"timeStamp": "Mon Nov 14 2016 14:20:15 GMT-0700 (Mountain Standard Time)",
+		"fuelPumpStatus": "hello2",
+		"engineRPM": "world2",
+		"seatBeltStatus": "off2",
+		"absStatus": "no2"
+	}
+
+}
+]
+
+{
+	"records": 
+		[
+			{
+		"timeStamp": "Mon Nov 14 2016 14:20:14 GMT-0700 (Mountain Standard Time)",
+		"fuelPumpStatus": "hello",
+		"engineRPM": "world",
+		"seatBeltStatus": "off",
+		"absStatus": "no"
+	},
+	{
+		"timeStamp": "Mon Nov 14 2016 14:20:15 GMT-0700 (Mountain Standard Time)",
+		"fuelPumpStatus": "hello2",
+		"engineRPM": "world2",
+		"seatBeltStatus": "off2",
+		"absStatus": "no2"
+	}
+		]
+}
