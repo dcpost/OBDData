@@ -25,10 +25,28 @@ router.get('/trip', function(req, res) {
     var collection = db.get('records');
         
     var tripID = req.get("tripID");
-    console.log(tripID);
 
     collection.find({'hostTrip': tripID},function(e,docs){
         res.json(docs);
+    });
+});
+
+/*
+ * GET a vehicle.
+ */
+router.get('/vehicle', function(req, res) {
+    var db = req.db;
+    var collection = db.get('vehicles');
+        
+    var vehicleID = req.get("vehicleID");
+
+    collection.find({'vehicleID': vehicleID},function(e,docs){
+        if (e) {
+            res.send("false");
+        }
+        else {
+            res.send("true");
+        }
     });
 });
 
