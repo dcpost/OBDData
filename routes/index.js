@@ -162,26 +162,27 @@ router.post('/addOBDRecords', function(req, res) {
     
     tripscollection.find({},{},function(e,docs){
         var trips=docs;
-        console.log("hello1");
-        var data = req.body.data;
         
+        var data = req.body.data;
         dataJSON=JSON.parse(data);
         console.log(dataJSON);
         for (var i=0; i<dataJSON.records.length;i++) {
 
-             console.log("hello2");
+            
             // Get our form values. These rely on the "name" attributes
-            var timeStamp = dataJSON.records[i].timeStamp;
+            var timeStamp = dataJSON.records[i].timestamp;
             
             var errors = dataJSON.records[i].errors;
 
             for (var j=0; j<trips.length;j++){
-
-                var timeStampDate = Date.parse(timeStamp);
+                
+                var timeStampDate = new Date(parseInt(timeStamp)*1000);
+                console.log(timeStampDate);
                 var startTimeDate = Date.parse(trips[j].startTime);
                 var endTimeDate = Date.parse(trips[j].endTime);
 
-                if(timeStampDate>startTimeDate && timeStampDate<endTimeDate){   
+                if(timeStampDate>startTimeDate && timeStampDate<endTimeDate){
+                    console.log("found record"); 
                     hostTrip=trips[j]._id.toString();
                     var recordCollection = db.get('obdRecords');
 
