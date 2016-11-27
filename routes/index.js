@@ -22,9 +22,14 @@ router.get('/trips', function(req, res) {
  */
 router.get('/trip', function(req, res) {
     var db = req.db;
-    var collection = db.get('records');
-        
     var tripID = req.get("tripID");
+    var type = req.get("type");
+    var collection;
+    if(type === "phone"){
+        collection = db.get('phoneRecords');
+    }else if(type ==="OBD"){
+        collection = db.get('obdRecords');
+    }
 
     collection.find({'hostTrip': tripID},function(e,docs){
         res.json(docs);
@@ -65,6 +70,7 @@ router.get('/records', function(req, res) {
 /* POST start trip */
 router.post('/starttrip', function(req, res) {
 
+    
     // Set our internal DB variable
     var db = req.db;
 
@@ -80,7 +86,7 @@ router.post('/starttrip', function(req, res) {
 
     //set the end date 1 year from now
     var endTime = new Date(startTime.getTime() + 525600*60000);
-
+    
     // Submit to the DB
     tripscollection.insert({
         "startTime" : startTime,
