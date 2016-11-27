@@ -55,7 +55,7 @@ router.get('/vehicle', function(req, res) {
  */
 router.get('/records', function(req, res) {
     var db = req.db;
-    var collection = db.get('records');
+    var collection = db.get('obdRecords');
     collection.find({},{},function(e,docs){
         res.json(docs);
     });
@@ -143,11 +143,7 @@ router.post('/addOBDRecords', function(req, res) {
             // Get our form values. These rely on the "name" attributes
             var timeStamp = data.records[i].timeStamp;
             
-            var fuelPumpStatus = data.records[i].fuelPumpStatus;
-            var engineRPM = data.records[i].engineRPM;
-            var seatBeltStatus = data.records[i].seatBeltStatus;
-            var absStatus = data.records[i].absStatus;
-            var hostTrip =  null;
+            var errors = data.records[i].erros;
 
             for (var j=0; j<trips.length;j++){
 
@@ -162,10 +158,7 @@ router.post('/addOBDRecords', function(req, res) {
                     // Submit to the DB
                     recordCollection.insert({
                         "timeStamp" : timeStamp,
-                        "fuelPumpStatus" : fuelPumpStatus,
-                        "engineRPM" : engineRPM,
-                        "seatBeltStatus" : seatBeltStatus,
-                        "absStatus" : absStatus,
+                        "errors" : errors,
                         "hostTrip" : hostTrip
                     });
                 }
@@ -214,7 +207,8 @@ router.post('/addPhoneRecords', function(req, res) {
                         "xcoord" : xcoord,
                         "ycoord" : ycoord,
                         "speed" : speed,
-                        "hostTrip" : hostTrip
+                        "hostTrip" : hostTrip,
+                        "timestamp" : timeStamp
                     });
                 }
             }
