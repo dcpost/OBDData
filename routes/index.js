@@ -137,19 +137,21 @@ router.post('/addOBDRecords', function(req, res) {
     // Set our collection
     var tripscollection = db.get('trips');
 
+    
     tripscollection.find({},{},function(e,docs){
         var trips=docs;
-        
+        console.log("hello1");
         var data = req.body.data;
-        data=JSON.parse(data);
-        console.log(data.records.length);
-        for (var i=0; i<data.records.length;i++) {
+        
+        dataJSON=JSON.parse(data);
+        console.log(dataJSON);
+        for (var i=0; i<dataJSON.records.length;i++) {
 
-             console.log("hello");
+             console.log("hello2");
             // Get our form values. These rely on the "name" attributes
-            var timeStamp = data.records[i].timeStamp;
+            var timeStamp = dataJSON.records[i].timeStamp;
             
-            var errors = data.records[i].erros;
+            var errors = dataJSON.records[i].errors;
 
             for (var j=0; j<trips.length;j++){
 
