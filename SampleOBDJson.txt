@@ -7,3 +7,17 @@
 		"errors": "hello2"
 	}]
 }
+
+{
+	"records": [{
+		"timeStamp": "2016-11-27T21:00:11.159Z",
+		"xcoord": "hello",
+		"ycoord": "hello",
+		"speed": "hello"
+	}, {
+		"timeStamp": "2016-11-27T21:01:11.159Z",
+		"xcoord": "hello",
+		"ycoord": "hello",
+		"speed": "hello"
+	}]
+}

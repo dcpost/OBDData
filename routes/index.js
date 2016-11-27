@@ -68,9 +68,9 @@ router.get('/vehicle', function(req, res) {
 });
 
 /*
- * GET all records.
+ * GET all OBD records.
  */
-router.get('/records', function(req, res) {
+router.get('/OBDRecords', function(req, res) {
     var db = req.db;
     var collection = db.get('obdRecords');
     collection.find({},{},function(e,docs){
@@ -78,6 +78,16 @@ router.get('/records', function(req, res) {
     });
 });
 
+/*
+ * GET all phone records.
+ */
+router.get('/phoneRecords', function(req, res) {
+    var db = req.db;
+    var collection = db.get('phoneRecords');
+    collection.find({},{},function(e,docs){
+        res.json(docs);
+    });
+});
 
 /* POST start trip */
 router.post('/starttrip', function(req, res) {
@@ -219,7 +229,7 @@ router.post('/addPhoneRecords', function(req, res) {
                 var endTimeDate = Date.parse(trips[j].endTime);
 
                 if(timeStampDate>startTimeDate && timeStampDate<endTimeDate){   
-                    hostTrip=trips[j]._id;
+                    hostTrip=trips[j]._id.toString();
                     var recordCollection = db.get('phoneRecords');
 
                     // Submit to the DB
