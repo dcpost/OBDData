@@ -22,16 +22,28 @@ router.get('/trips', function(req, res) {
  */
 router.get('/trip', function(req, res) {
     var db = req.db;
-    var tripID = req.get("tripID");
+    var inputTripID = req.get("tripID");
     var type = req.get("type");
     var collection;
     if(type === "phone"){
         collection = db.get('phoneRecords');
     }else if(type ==="OBD"){
         collection = db.get('obdRecords');
+    }else{
+        res.send("false");
     }
+    collection.find({hostTrip:inputTripID},{},function(e,docs){
+        res.json(docs);
+    });
+});
 
-    collection.find({'hostTrip': tripID},function(e,docs){
+/*
+ * GET all records.
+ */
+router.get('/test', function(req, res) {
+    var db = req.db;
+    var collection = db.get('obdRecords');
+    collection.find({hostTrip:"583b491f2180c029849c428c"},{},function(e,docs){
         res.json(docs);
     });
 });
@@ -160,7 +172,7 @@ router.post('/addOBDRecords', function(req, res) {
                 var endTimeDate = Date.parse(trips[j].endTime);
 
                 if(timeStampDate>startTimeDate && timeStampDate<endTimeDate){   
-                    hostTrip=trips[j]._id;
+                    hostTrip=trips[j]._id.toString();
                     var recordCollection = db.get('obdRecords');
 
                     // Submit to the DB
