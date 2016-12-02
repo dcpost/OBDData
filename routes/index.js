@@ -21,18 +21,22 @@ router.get('/trips', function(req, res) {
 /*
  * GET a trip.
  */
-router.get('/trip', function(req, res) {
+router.get('/getPhoneTrip', function(req, res) {
     var db = req.db;
     var inputTripID = req.get("tripID");
-    var type = req.get("type");
-    var collection;
-    if(type === "phone"){
-        collection = db.get('phoneRecords');
-    }else if(type ==="OBD"){
-        collection = db.get('obdRecords');
-    }else{
-        res.send("false");
-    }
+    var collection = db.get('phoneRecords');
+    collection.find({hostTrip:inputTripID},{},function(e,docs){
+        res.json(docs);
+    });
+});
+
+/*
+ * GET a trip.
+ */
+router.get('/getOBDTrip', function(req, res) {
+    var db = req.db;
+    var inputTripID = req.get("tripID");
+    var collection = db.get('obdRecords');
     collection.find({hostTrip:inputTripID},{},function(e,docs){
         res.json(docs);
     });
