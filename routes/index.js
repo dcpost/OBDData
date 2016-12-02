@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
+var inProgress = false;
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
@@ -92,39 +93,43 @@ router.get('/phoneRecords', function(req, res) {
 /* POST start trip */
 router.post('/starttrip', function(req, res) {
 
-    
-    // Set our internal DB variable
-    var db = req.db;
+    if(inProgress==false){
+        // Set our internal DB variable
+        var db = req.db;
 
-    // Set our collection
-    var tripscollection = db.get('trips');
+        // Set our collection
+        var tripscollection = db.get('trips');
 
-    var startTime=new Date();
+        var startTime=new Date();
 
-    var vehicleID = "1";
+        var vehicleID = "1";
 
-    var inProgress="true"
+        inProgress=true
 
 
-    //set the end date 1 year from now
-    var endTime = new Date(startTime.getTime() + 525600*60000);
-    
-    // Submit to the DB
-    tripscollection.insert({
-        "startTime" : startTime,
-        "endTime" : endTime,
-        "vehicleID" : vehicleID,
-        "inProgress" : inProgress
-    }, function (err, doc) {
-        if (err) {
-            // If it failed, return error
-            res.send("There was a problem adding the information to the database.");
-        }
-        else {
-            // And forward to success page
-            res.send("");
-        }
-    });
+
+        //set the end date 1 year from now
+        var endTime = new Date(startTime.getTime() + 525600*60000);
+        
+        // Submit to the DB
+        tripscollection.insert({
+            "startTime" : startTime,
+            "endTime" : endTime,
+            "vehicleID" : vehicleID,
+            "inProgress" : "true"
+        }, function (err, doc) {
+            if (err) {
+                // If it failed, return error
+                res.send("There was a problem adding the information to the database.");
+            }
+            else {
+                // And forward to success page
+                res.send("");
+            }
+        });
+    }else{
+        res.send("There is already a trip in progress");
+    }
     
 });
 
@@ -135,6 +140,7 @@ router.post('/endtrip', function(req, res) {
 
     // Set our collection
     var tripscollection = db.get('trips');
+    inProgress= false
 
     tripscollection.update(
         { inProgress: "true" },
