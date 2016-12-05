@@ -177,15 +177,11 @@ router.post('/addOBDRecords', function(req, res) {
         dataJSON=JSON.parse(data);
         console.log(dataJSON);
         for (var i=0; i<dataJSON.records.length;i++) {
-
-            
             // Get our form values. These rely on the "name" attributes
-            var timeStamp = dataJSON.records[i].timestamp;
-            
+            var timeStamp = dataJSON.records[i].timeStamp;
             var errors = dataJSON.records[i].errors;
 
             for (var j=0; j<trips.length;j++){
-                
                 var timeStampDate = new Date(parseInt(timeStamp)*1000);
                 console.log(timeStampDate);
                 var startTimeDate = Date.parse(trips[j].startTime);
@@ -202,6 +198,7 @@ router.post('/addOBDRecords', function(req, res) {
                         "errors" : errors,
                         "hostTrip" : hostTrip
                     });
+					 console.log("Successfully inserted OBD record");
                 }
             }
         }
@@ -229,13 +226,14 @@ router.post('/addPhoneRecords', function(req, res) {
              console.log("hello");
             // Get our form values. These rely on the "name" attributes
             var timeStamp = data.records[i].timeStamp;
-            var xcoord = data.records[i].xcoord;
-            var ycoord = data.records[i].ycoord;
+            var latitude = data.records[i].latitude;
+            var longitude = data.records[i].longitude;
             var speed = data.records[i].speed;
 
             for (var j=0; j<trips.length;j++){
 
-                var timeStampDate = Date.parse(timeStamp);
+                var timeStampDate = new Date(parseInt(timeStamp)*1000);
+                console.log(timeStampDate);
                 var startTimeDate = Date.parse(trips[j].startTime);
                 var endTimeDate = Date.parse(trips[j].endTime);
 
@@ -245,11 +243,11 @@ router.post('/addPhoneRecords', function(req, res) {
 
                     // Submit to the DB
                     recordCollection.insert({
-                        "xcoord" : xcoord,
-                        "ycoord" : ycoord,
+                        "latitude" : latitude,
+                        "longitude" : longitude,
                         "speed" : speed,
                         "hostTrip" : hostTrip,
-                        "timestamp" : timeStamp
+                        "timeStamp" : timeStamp
                     });
                 }
             }

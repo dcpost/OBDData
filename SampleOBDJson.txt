@@ -1,23 +1,23 @@
 {
 	"records": [{
-		"timeStamp": "2016-11-27T21:00:11.159Z",
+		"timeStamp": "1480932059",
 		"errors": "hello"
 	}, {
-		"timeStamp": "2016-11-27T21:01:11.159Z",
+		"timeStamp": "1480932060",
 		"errors": "hello2"
 	}]
 }
 
 {
 	"records": [{
-		"timeStamp": "2016-11-27T21:00:11.159Z",
-		"xcoord": "hello",
-		"ycoord": "hello",
-		"speed": "hello"
+		"timeStamp": "1480932059",
+		"latitude": "51.081468",
+		"longitude": "-114.130640",
+		"speed": "0"
 	}, {
-		"timeStamp": "2016-11-27T21:01:11.159Z",
-		"xcoord": "hello",
-		"ycoord": "hello",
-		"speed": "hello"
+		"timeStamp": "1480932060",
+		"latitude": "51.081568",
+		"longitude": "-114.130540",
+		"speed": "46.8"
 	}]
 }
